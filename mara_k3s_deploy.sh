@@ -164,64 +164,63 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     update_os
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function update_os() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     install_python
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function install_python() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     install_k3s
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function install_k3s() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     clone_repo
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function clone_repo() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     setup_venv
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function setup_venv() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     configure_pulumi
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function configure_pulumi() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     build_mara
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function build_mara() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
     update_os
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function update_os() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     install_k3s
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function install_k3s() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${UNDEPLOY}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
     cleanup
-    elapsed_time
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-    echo "=============>>>>> Function Elasped Time: $EXECUTION_TIME <<<<<============="
+    echo "=============>>>>> Function cleanup() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 else
     echo "Nothing to do! Please select an option!"
@@ -232,4 +231,4 @@ fi
 # Overall run time is....
 DURATION=$(echo "$(date +%s.%N) - ${FULL_START_TIME}" | bc)
 EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
-echo "=============>>>>> Script Elasped Time: $EXECUTION_TIME <<<<<=============" 
+echo "=============>>>>> Script Elapsed Time: $EXECUTION_TIME <<<<<=============" 
