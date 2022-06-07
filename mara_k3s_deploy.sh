@@ -91,6 +91,16 @@ cleanup() {
     find . -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir pulumi stack rm "${STACK_NAME}" --force --yes \\;
 }
 
+tool_install() {
+  # Install K9s; again, piping to curl is not a good idea so this should be refactored at some point...
+  curl -sS https://webinstall.dev/k9s | bash
+  # Install Kompose
+  curl -L https://github.com/kubernetes/kompose/releases/download/v1.26.1/kompose-linux-amd64 -o kompose
+  chmod +x kompose
+  sudo mv ./kompose /usr/local/bin/kompose
+}
+
+
 help()
 {
    # Display Help
@@ -204,6 +214,12 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
     echo "=============>>>>> Function build_mara() Elapsed Time: $EXECUTION_TIME <<<<<============="
+
+    START_TIME=$(date +%s.%N)
+    tool_install
+    DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
+    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    echo "=============>>>>> Function tool_install() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
