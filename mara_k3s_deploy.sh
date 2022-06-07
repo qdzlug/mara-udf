@@ -29,8 +29,8 @@ install_python() {
   else
     git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
   fi
-  "${HOME}"/.asdf/bin/asdf plugin add python 
-  "${HOME}"/.asdf/bin/asdf install python "${PYVER}"
+  "${HOME}"/.asdf/bin/asdf plugin add python || true
+  "${HOME}"/.asdf/bin/asdf install python "${PYVER}" || true
    PATH="${HOME}"/.asdf:"${PATH}"
   "${HOME}"/.asdf/bin/asdf global python "${PYVER}"
   "${HOME}"/.asdf/bin/asdf shell python "${PYVER}"
