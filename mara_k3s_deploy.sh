@@ -32,6 +32,7 @@ install_python() {
   "${HOME}"/.asdf/bin/asdf plugin add python || true
   "${HOME}"/.asdf/bin/asdf install python "${PYVER}" || true
    PATH="${HOME}"/.asdf:"${PATH}"
+   source "${HOME}"/.asdf/asdf.sh
   "${HOME}"/.asdf/bin/asdf global python "${PYVER}"
   "${HOME}"/.asdf/bin/asdf shell python "${PYVER}"
   "${HOME}"/.asdf/bin/asdf reshim
