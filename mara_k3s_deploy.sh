@@ -31,11 +31,10 @@ install_python() {
   fi
   "${HOME}"/.asdf/bin/asdf plugin add python 
   "${HOME}"/.asdf/bin/asdf install python "${PYVER}"
-  source "${HOME}/.asdf/asdf.sh
-  export PATH="${HOME}/.asdf:"${PATH}"
-  asdf global python "${PYVER}"
-  asdf shell python "${PYVER}"
-  asdf reshim
+   PATH="${HOME}"/.asdf:"${PATH}"
+  "${HOME}"/.asdf/bin/asdf global python "${PYVER}"
+  "${HOME}"/.asdf/bin/asdf shell python "${PYVER}"
+  "${HOME}"/.asdf/bin/asdf reshim
 }
 
 install_k3s() {
@@ -111,6 +110,54 @@ tool_install() {
   curl -L https://github.com/kubernetes/kompose/releases/download/v1.26.1/kompose-linux-amd64 -o kompose
   chmod +x kompose
   sudo mv ./kompose /usr/local/bin/kompose
+}
+
+install_dns() {
+  # First disable the system resolver...
+  sudo systemctl disable systemd-resolved
+  sudo systemctl stop systemd-resolved
+  sudo unlink /etc/resolv.conf
+
+  # Add in a default...we'll use google
+  echo nameserver 8.8.8.8 | sudo tee /etc/resolv.conf
+
+  # Install dnsmasq
+  sudo apt -y install dnsmasq
+
+  # What is our address?
+  IP_ADDR=$(ip -j  -4 addr show ens5| jq ".[].addr_info[].local" | sed 's/"//g')
+
+  # Create config
+cat > '/tmp/dnsmaq' <<FileContent
+port=53
+domain-needed
+bogus-priv
+strict-order
+expand-hosts
+domain=example.local
+listen-address="${IP_ADDR}"
+FileContent
+
+  # Copy config into place....
+  sudo cp /tmp/dnsmasq /etc/dnsmas
+
+  # Update hosts file....
+  echo "${IP_ADDR}    mara.example.local" | sudo tee /etc/hosts
+
+  # Update the resolv.conf
+cat > 'tmp/resolv.conf' <<FileContent
+nameserver "${IP_ADDR}"
+nameserver 8.8.8.8
+search example.local
+domain example.local
+FileContent
+
+  # Restart dnsmasq
+  sudo systemctl restart dnsmasq
+
+  # Test DNS
+  dig @127.0.01 mara.example.local
+
 }
 
 
@@ -233,6 +280,12 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
     echo "=============>>>>> Function tool_install() Elapsed Time: $EXECUTION_TIME <<<<<============="
+
+    START_TIME=$(date +%s.%N)
+    install_dns
+    DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
+    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    echo "=============>>>>> Function install_dns() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
