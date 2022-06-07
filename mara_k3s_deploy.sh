@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+#
+# This script is intended to be run on Ubuntu 20.04 (Focal). It *may* run on other Debian/Ubuntu variants, but it
+# will definitely not run on Red Hat variants. It will definitely not run on Darwin. Plan9? Right out. Just stick
+# to Ubuntu and you should be good.
+#
+
 set -o errexit  # abort on nonzero exit status
 set -o nounset  # abort on unbound variable
 set -o pipefail # don't hide errors within pipes
