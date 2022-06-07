@@ -24,7 +24,11 @@ update_os() {
 }
 
 install_python() {
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
+  if [ -d ~/.asdf ] ; then
+    echo "Existing asdf directory found, will not clone"
+  else
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
+  fi
   "${HOME}"/.asdf/bin/asdf plugin add python 
   "${HOME}"/.asdf/bin/asdf install python "${PYVER}"
   source "${HOME}/.asdf/asdf.sh
@@ -41,8 +45,11 @@ install_k3s() {
 }
 
 clone_repo() {
-    cd "${HOME}" && git clone --recurse-submodules https://github.com/nginxinc/kic-reference-architectures 
-
+  if [ -d ~/kic-reference-architectures ] ; then
+    echo "Existing source directory found; will not clone"
+  else
+    cd "${HOME}" && git clone --recurse-submodules https://github.com/nginxinc/kic-reference-architectures
+  fi
 }
 
 setup_venv() {
