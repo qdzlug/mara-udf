@@ -48,7 +48,7 @@ configure_pulumi() {
 
     # Generate a random number for our pulumi stack...we use the built in bash RANDOM variable, 
     # but if you want you can change it
-    BUILD_NUMBER="${RANDOM}
+    BUILD_NUMBER="${RANDOM}"
     echo "PULUMI_STACK=marajenk${BUILD_NUMBER}" > "${PROJECT_ROOT}"/config/pulumi/environment
 
     # Build the stacks...
@@ -107,7 +107,7 @@ help()
    echo "MARA UDF Helper Script"
    echo " "
    echo "This is a simple helper script designed to enable configuration and deployment of the MARA"
-   echo "project on F5's UDF envrionment."
+   echo "project on F5's UDF environment."
    echo " "
    echo "This project is desgined to be run on a virtual machine that has at least 4 vCPU, 20GB of RAM,"
    echo "and 32GB of disk. This has been tested on Ubuntu 20.04 (Focal), but should work on other Debian"
