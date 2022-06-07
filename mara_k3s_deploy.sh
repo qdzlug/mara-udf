@@ -19,10 +19,10 @@ update_os() {
 
 install_python() {
   git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
-  $HOME/.asdf/bin/asdf plugin add python 
-  $HOME/.asdf/bin/asdf install python "${PYVER}"
-  source  $HOME/.asdf/asdf.sh
-  export PATH=$HOME/.asdf:$PATH
+  "${HOME}"/.asdf/bin/asdf plugin add python 
+  "${HOME}"/.asdf/bin/asdf install python "${PYVER}"
+  source "${HOME}/.asdf/asdf.sh
+  export PATH="${HOME}/.asdf:"${PATH}"
   asdf global python "${PYVER}"
   asdf shell python "${PYVER}"
   asdf reshim
@@ -35,7 +35,7 @@ install_k3s() {
 }
 
 clone_repo() {
-    cd $HOME && git clone --recurse-submodules https://github.com/nginxinc/kic-reference-architectures 
+    cd "${HOME}" && git clone --recurse-submodules https://github.com/nginxinc/kic-reference-architectures 
 
 }
 
@@ -48,7 +48,7 @@ configure_pulumi() {
 
     # Generate a random number for our pulumi stack...we use the built in bash RANDOM variable, 
     # but if you want you can change it
-    BUILD_NUMBER=$RANDOM
+    BUILD_NUMBER="${RANDOM}
     echo "PULUMI_STACK=marajenk${BUILD_NUMBER}" > "${PROJECT_ROOT}"/config/pulumi/environment
 
     # Build the stacks...
@@ -84,8 +84,11 @@ cleanup() {
     # Uninstall K3s
     /usr/local/bin/k3s-uninstall.sh || true
 
+    # Get the stack name....
+    STACK_NAME=$(cat "${PROJECT_ROOT}"/config/pulumi/environment  | awk -F= '{print $2}' )
+
     # Remove the Pulumi Stack
-    find . -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir pulumi stack rm marajenk${BUILD_NUMBER} --force --yes \\;
+    find . -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir pulumi stack rm "${STACK_NAME}" --force --yes \\;
 }
 
 help()
@@ -232,3 +235,4 @@ fi
 DURATION=$(echo "$(date +%s.%N) - ${FULL_START_TIME}" | bc)
 EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
 echo "=============>>>>> Script Elapsed Time: $EXECUTION_TIME <<<<<=============" 
+
