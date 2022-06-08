@@ -20,7 +20,7 @@ update_os() {
     sudo apt update
     DEBIAN_FRONTEND=noninteractive sudo apt -y upgrade
     PYVER=$(curl -s https://gitcdn.link/cdn/nginxinc/kic-reference-architectures/master/.python-version)
-    DEBIAN_FRONTEND=noninteractive sudo apt -y install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev docker.io firefox
+    DEBIAN_FRONTEND=noninteractive sudo apt -y install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev docker.io firefox jq
 }
 
 install_python() {
@@ -33,9 +33,13 @@ install_python() {
   "${HOME}"/.asdf/bin/asdf install python "${PYVER}" || true
    PATH="${HOME}"/.asdf/bin:"${PATH}"
    source "${HOME}"/.asdf/asdf.sh
+  echo " "
   "${HOME}"/.asdf/bin/asdf global python "${PYVER}"
+  echo " "
   "${HOME}"/.asdf/bin/asdf shell python "${PYVER}"
+  echo " "
   "${HOME}"/.asdf/bin/asdf reshim
+  echo " "
 }
 
 install_k3s() {
@@ -101,7 +105,7 @@ cleanup() {
     STACK_NAME=$(cat "${PROJECT_ROOT}"/config/pulumi/environment  | awk -F= '{print $2}' )
 
     # Remove the Pulumi Stack
-    find . -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir pulumi stack rm "${STACK_NAME}" --force --yes \\;
+    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir pulumi stack rm "${STACK_NAME}" --force --yes \\;
 }
 
 tool_install() {
@@ -126,7 +130,7 @@ install_dns() {
   sudo apt -y install dnsmasq
 
   # What is our address?
-  IP_ADDR=$(ip -j  -4 addr show ens5| jq ".[].addr_info[].local" | sed 's/"//g')
+  IP_ADDR=$(ip -j  route show to 0.0.0.0/0  | jq ".[].prefsrc" | sed 's/"//g')
 
   # Create config
 cat > '/tmp/dnsmaq' <<FileContent
@@ -143,7 +147,7 @@ FileContent
   sudo cp /tmp/dnsmasq /etc/dnsmas
 
   # Update hosts file....
-  echo "${IP_ADDR}    mara.example.local" | sudo tee /etc/hosts
+  echo "${IP_ADDR}    mara.example.local" | sudo tee -a /etc/hosts
 
   # Update the resolv.conf
 cat > 'tmp/resolv.conf' <<FileContent
