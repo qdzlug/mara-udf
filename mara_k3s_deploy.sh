@@ -32,14 +32,8 @@ install_python() {
   "${HOME}"/.asdf/bin/asdf plugin add python || true
   "${HOME}"/.asdf/bin/asdf install python "${PYVER}" || true
    PATH="${HOME}"/.asdf/bin:"${PATH}"
-   source "${HOME}"/.asdf/asdf.sh
-  echo " "
   "${HOME}"/.asdf/bin/asdf global python "${PYVER}"
-  echo " "
-  "${HOME}"/.asdf/bin/asdf shell python "${PYVER}"
-  echo " "
   "${HOME}"/.asdf/bin/asdf reshim
-  echo " "
 }
 
 install_k3s() {
@@ -250,6 +244,9 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
     echo "=============>>>>> Function install_python() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
+    # Source the asdf config...
+    source "${HOME}"/.asdf/asdf.sh
+
     START_TIME=$(date +%s.%N)
     install_k3s
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
@@ -322,4 +319,3 @@ fi
 DURATION=$(echo "$(date +%s.%N) - ${FULL_START_TIME}" | bc)
 EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
 echo "=============>>>>> Script Elapsed Time: $EXECUTION_TIME <<<<<=============" 
-
