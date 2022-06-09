@@ -71,7 +71,7 @@ clone_repo() {
   # After we clone, check to see if we need to move a JWT into place.
   #
   if [ -f "${HOME}"/jwt ] ; then
-    cp "${HOME}"/jwt "${HOME}"/kic-reference-architectures/extras/jwt
+    cp "${HOME}"/jwt "${HOME}"/kic-reference-architectures/extras/jwt.token
     echo "Copied JWT into place"
   fi
 }
