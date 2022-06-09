@@ -68,7 +68,7 @@ configure_pulumi() {
 
     # Set our helm values 
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set certmgr:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "marajenks${BUILD_NUMBER}.zathras.io" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "mara.test" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "microk8s-cluster" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:infra_type "kubeconfig" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
