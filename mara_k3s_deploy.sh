@@ -303,18 +303,6 @@ if [ -x "${PULUMI_ACCESS_TOKEN+x}" ] ; then
     sleep 5
 fi
 
-#
-# Is there a JWT set?
-#
-if [ -f "$HOME/jwt" ] ; then
-    echo "Found JWT for NGINX Plus; will copy into appropriate directory"
-else
-    echo "No JWT found; the deployment will deploy the NGINX OSS IC."
-    echo " "
-    echo "If you want to deploy NGINX Plus, hit ctrl-c now and put a valid JWT for NGINX Plus IC into "
-    echo "the file $HOME/jwt. Script will pause for 5 seconds now."
-    sleep 5
-fi
 
 
 # Other required variables
@@ -322,7 +310,21 @@ PROJECT_ROOT=$HOME/kic-reference-architectures
 FULL_START_TIME=$(date +%s.%N)
 
 # Deploy everything...
-if [ "${DEPLOY}" = "TRUE" ]; then 
+if [ "${DEPLOY}" = "TRUE" ]; then
+
+    #
+    # Is there a JWT set? We only care on a full deploy.
+    #
+    if [ -f "$HOME/jwt" ] ; then
+        echo "Found JWT for NGINX Plus; will copy into appropriate directory"
+    else
+        echo "No JWT found; the deployment will deploy the NGINX OSS IC."
+        echo " "
+        echo "If you want to deploy NGINX Plus, hit ctrl-c now and put a valid JWT for NGINX Plus IC into "
+        echo "the file $HOME/jwt. Script will pause for 5 seconds now."
+        sleep 5
+    fi
+
     START_TIME=$(date +%s.%N)
     update_os
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
