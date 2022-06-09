@@ -118,9 +118,9 @@ configure_pulumi() {
 }
 
 #####################################################################################################################
-# This is the MARA deployment; note that we use the `start_kube.sh` script as opposed to the `start.sh` script; this
+# This is the MARA deployment; note that we use the "start_kube.sh" script as opposed to the "start.sh" script; this
 # is done in order to bypass the interactive warnings and prompts. Values are instead set in the function above
-# named `configure_pulumi()`.
+# named "configure_pulumi()".
 #####################################################################################################################
 build_mara() {
     "${PROJECT_ROOT}"/bin/start_kube.sh
@@ -130,7 +130,7 @@ build_mara() {
 # Clean up our deployment and environment. This script will remove the deployment of MARA along with the K3s
 # installation.
 #
-# Note that you may need to purge the `kic-reference-architectures` repository directory if you run into issues when
+# Note that you may need to purge the "kic-reference-architectures" repository directory if you run into issues when
 # trying to re-run the process. Every effort has been taken to make this process idempotent, but....sometimes the
 # process needs a kick.
 #####################################################################################################################
@@ -156,7 +156,7 @@ cleanup() {
 # present in your environment.
 #
 # Note: you will need to make sure that this function returns 0; any non-zero RC will cause the process to abort.
-# If you need assistance with this, please see the use of `|| true` in some of the areas above.
+# If you need assistance with this, please see the use of "|| true" in some of the areas above.
 #####################################################################################################################
 tool_install() {
   # Install K9s; again, piping to curl is not a good idea so this should be refactored at some point...
@@ -168,11 +168,11 @@ tool_install() {
 }
 
 #####################################################################################################################
-# This demo is designed to use `mara.test` as the FQDN of the deployment, and in order to make sure that we can
-# resolve our FQDN appropriately we install and configure the `dnsmasq` service.
+# This demo is designed to use "mara.test" as the FQDN of the deployment, and in order to make sure that we can
+# resolve our FQDN appropriately we install and configure the "dnsmasq" service.
 #
 # It is important to be careful when editing this; the FQDN needs to be resolvable within the BoS loadgenerator
-# pod. This is handled by adjusting the `resolv.conf` on the host to point to the external IP address of the
+# pod. This is handled by adjusting the "resolv.conf" on the host to point to the external IP address of the
 # host as the main resolver. This information is then passed into the coredns module and used as a forward.
 #
 # If this is broken, it will most likely cause the loadgenerator to not work properly.
@@ -183,16 +183,19 @@ install_dns() {
   sudo systemctl stop systemd-resolved
   sudo unlink /etc/resolv.conf
 
-  # Add in a default...we'll use google
-  echo nameserver 8.8.8.8 | sudo tee /etc/resolv.conf
-
-  # Install dnsmasq
+  #
+  # Install dnsmasq - we do this before we start mucking about with the resolvers...
+  #
   sudo apt -y install dnsmasq
 
+  #
   # What is our address?
+  #
   IP_ADDR=$(ip -j  route show to 0.0.0.0/0  | jq ".[].prefsrc" | sed 's/"//g')
 
+  #
   # Create config
+  #
 cat > '/tmp/dnsmasq' <<FileContent
 port=53
 domain-needed
@@ -203,10 +206,14 @@ domain=test
 listen-address="${IP_ADDR}"
 FileContent
 
+  #
   # Copy config into place....
+  #
   sudo cp /tmp/dnsmasq /etc/dnsmasq
 
+  #
   # Update hosts file....
+  #
   echo "${IP_ADDR}    mara.test  ${HOSTNAME}" | sudo tee -a /etc/hosts
 
   #
@@ -222,7 +229,14 @@ search test
 domain test
 FileContent
 
+  #
+  # Copy config into place....
+  #
+  sudo cp /tmp/resolv.conf /etc/resolv.conf
+
+  #
   # Restart dnsmasq
+  #
   sudo systemctl restart dnsmasq
 
   # Test DNS
@@ -330,13 +344,13 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
     update_os
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function update_os() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     install_python
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function install_python() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     # Source the asdf config...
@@ -345,63 +359,63 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
     install_k3s
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function install_k3s() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     clone_repo
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function clone_repo() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     setup_venv
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function setup_venv() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     configure_pulumi
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function configure_pulumi() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     build_mara
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function build_mara() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     tool_install
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function tool_install() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     install_dns
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function install_dns() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
     update_os
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function update_os() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
     START_TIME=$(date +%s.%N)
     install_k3s
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function install_k3s() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${UNDEPLOY}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
     cleanup
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function cleanup() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 else
@@ -412,5 +426,5 @@ fi
 
 # Overall run time is....
 DURATION=$(echo "$(date +%s.%N) - ${FULL_START_TIME}" | bc)
-EXECUTION_TIME=`printf "%.2f seconds" $DURATION`
+EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
 echo "=============>>>>> Script Elapsed Time: $EXECUTION_TIME <<<<<=============" 
