@@ -356,6 +356,15 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     # Source the asdf config...
     source "${HOME}"/.asdf/asdf.sh
 
+    #
+    # We need DNS before we deploy K3s, otherwise we get the wrong resolvers inside CoreDNS
+    #
+    START_TIME=$(date +%s.%N)
+    install_dns
+    DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
+    echo "=============>>>>> Function install_dns() Elapsed Time: $EXECUTION_TIME <<<<<============="
+
     START_TIME=$(date +%s.%N)
     install_k3s
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
@@ -391,12 +400,6 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function tool_install() Elapsed Time: $EXECUTION_TIME <<<<<============="
-
-    START_TIME=$(date +%s.%N)
-    install_dns
-    DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
-    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
-    echo "=============>>>>> Function install_dns() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
