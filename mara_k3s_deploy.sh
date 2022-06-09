@@ -99,7 +99,7 @@ cleanup() {
     STACK_NAME=$(cat "${PROJECT_ROOT}"/config/pulumi/environment | grep PULUMI_STACK | awk -F= '{print $2}' )
 
     # Remove the Pulumi Stack
-    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack rm "${STACK_NAME}" --force --yes +
+    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack rm "${STACK_NAME}" --force --yes \;
 }
 
 tool_install() {
@@ -133,7 +133,7 @@ domain-needed
 bogus-priv
 strict-order
 expand-hosts
-domain=example.local
+domain=test
 listen-address="${IP_ADDR}"
 FileContent
 
@@ -141,21 +141,21 @@ FileContent
   sudo cp /tmp/dnsmasq /etc/dnsmasq
 
   # Update hosts file....
-  echo "${IP_ADDR}    mara.example.local  ${HOSTNAME}" | sudo tee -a /etc/hosts
+  echo "${IP_ADDR}    mara.test  ${HOSTNAME}" | sudo tee -a /etc/hosts
 
   # Update the resolv.conf
 cat > '/tmp/resolv.conf' <<FileContent
 nameserver "${IP_ADDR}"
 nameserver 8.8.8.8
-search example.local
-domain example.local
+search test
+domain test
 FileContent
 
   # Restart dnsmasq
   sudo systemctl restart dnsmasq
 
   # Test DNS
-  dig @127.0.01 mara.example.local
+  dig @127.0.01 mara.test
 
 }
 
