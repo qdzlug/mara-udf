@@ -127,7 +127,7 @@ install_dns() {
   IP_ADDR=$(ip -j  route show to 0.0.0.0/0  | jq ".[].prefsrc" | sed 's/"//g')
 
   # Create config
-cat > '/tmp/dnsmaq' <<FileContent
+cat > '/tmp/dnsmasq' <<FileContent
 port=53
 domain-needed
 bogus-priv
@@ -141,7 +141,7 @@ FileContent
   sudo cp /tmp/dnsmasq /etc/dnsmasq
 
   # Update hosts file....
-  echo "${IP_ADDR}    mara.example.local" | sudo tee -a /etc/hosts
+  echo "${IP_ADDR}    mara.example.local  ${HOSTNAME}" | sudo tee -a /etc/hosts
 
   # Update the resolv.conf
 cat > 'tmp/resolv.conf' <<FileContent
