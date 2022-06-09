@@ -106,7 +106,7 @@ configure_pulumi() {
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set certmgr:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "mara.test" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "microk8s-cluster" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "default" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:infra_type "kubeconfig" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
     "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logagent:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
