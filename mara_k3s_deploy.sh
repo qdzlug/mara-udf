@@ -138,7 +138,7 @@ listen-address="${IP_ADDR}"
 FileContent
 
   # Copy config into place....
-  sudo cp /tmp/dnsmasq /etc/dnsmas
+  sudo cp /tmp/dnsmasq /etc/dnsmasq
 
   # Update hosts file....
   echo "${IP_ADDR}    mara.example.local" | sudo tee -a /etc/hosts
