@@ -223,7 +223,7 @@ FileContent
   # as it's upstream resolver, which enables us to resolve mara.test
   #
 cat > '/tmp/resolv.conf' <<FileContent
-nameserver "${IP_ADDR}"
+nameserver ${IP_ADDR}
 nameserver 8.8.8.8
 search test
 domain test
