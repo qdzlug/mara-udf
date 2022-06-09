@@ -87,7 +87,7 @@ build_mara() {
 
 cleanup() {
     # Call the destroy script to remove our MARA
-    PATH="${PROJECT_ROOT}"/pulumi/python/venv/bin:$PATH "${PROJECT_ROOT}"/bin/destroy.sh
+    PATH="${PROJECT_ROOT}"/pulumi/python/venv/bin:$PATH "${PROJECT_ROOT}"/bin/destroy.sh || true
 
     # Stop all K3s servces
     /usr/local/bin/k3s-killall.sh || true
@@ -96,10 +96,10 @@ cleanup() {
     /usr/local/bin/k3s-uninstall.sh || true
 
     # Get the stack name....
-    STACK_NAME=$(cat "${PROJECT_ROOT}"/config/pulumi/environment  | awk -F= '{print $2}' )
+    STACK_NAME=$(cat "${PROJECT_ROOT}"/config/pulumi/environment | grep PULUMI_STACK | awk -F= '{print $2}' )
 
     # Remove the Pulumi Stack
-    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir pulumi stack rm "${STACK_NAME}" --force --yes \\;
+    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir "${PROJECT_ROOT}"/pulumi/python/bin/pulumi stack rm "${STACK_NAME}" --force --yes \;
 }
 
 tool_install() {
