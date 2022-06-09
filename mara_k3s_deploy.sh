@@ -99,7 +99,7 @@ cleanup() {
     STACK_NAME=$(cat "${PROJECT_ROOT}"/config/pulumi/environment | grep PULUMI_STACK | awk -F= '{print $2}' )
 
     # Remove the Pulumi Stack
-    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack rm "${STACK_NAME}" --force --yes \;
+    find "${PROJECT_ROOT}" -mindepth 2 -maxdepth 6 -type f -name Pulumi.yaml -execdir "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack rm "${STACK_NAME}" --force --yes +
 }
 
 tool_install() {
@@ -144,7 +144,7 @@ FileContent
   echo "${IP_ADDR}    mara.example.local  ${HOSTNAME}" | sudo tee -a /etc/hosts
 
   # Update the resolv.conf
-cat > 'tmp/resolv.conf' <<FileContent
+cat > '/tmp/resolv.conf' <<FileContent
 nameserver "${IP_ADDR}"
 nameserver 8.8.8.8
 search example.local
