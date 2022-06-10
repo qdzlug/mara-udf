@@ -178,15 +178,15 @@ tool_install() {
 # If this is broken, it will most likely cause the loadgenerator to not work properly.
 #####################################################################################################################
 install_dns() {
-  # First disable the system resolver...
-  sudo systemctl disable systemd-resolved
-  sudo systemctl stop systemd-resolved
-  sudo unlink /etc/resolv.conf
-
   #
   # Install dnsmasq - we do this before we start mucking about with the resolvers...
   #
   sudo apt -y install dnsmasq
+
+  # First disable the system resolver...
+  sudo systemctl disable systemd-resolved
+  sudo systemctl stop systemd-resolved
+  sudo unlink /etc/resolv.conf
 
   #
   # What is our address?
