@@ -240,10 +240,74 @@ FileContent
   sudo systemctl restart dnsmasq
 
   # Test DNS
-  dig @127.0.01 mara.test
+  dig @${IP_ADDR} mara.test
 
 }
 
+#####################################################################################################################
+# Configure coredns to use the host system's nameserver (dnsmasq); note that this function creates a configmap
+# that works with the current version of coredns. There is a good chance that this may break on future upgrades.
+#
+# To be fair, there are likely more sustainable ways to do this....but this works for now, and pull requests
+# are welcome...
+#####################################################################################################################
+coredns_config()
+{
+
+#
+# We are going to use the IP address of our host...
+#
+IP_ADDR=$(ip -j  route show to 0.0.0.0/0  | jq ".[].prefsrc" | sed 's/"//g')
+
+#
+# We build our configuration file; this logic says that for every query for the "test" domain we should use
+# IP_ADDR to point to our resolver. This will allow the locust loadgenerator to hit the NGINX IC.
+#
+cat > '/tmp/coredns.yaml' <<FileContent
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+        }
+        hosts /etc/coredns/NodeHosts {
+          ttl 60
+          reload 15s
+          fallthrough
+        }
+        prometheus :9153
+        forward test ${IP_ADDR}
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+    import /etc/coredns/custom/*.server
+  NodeHosts: |
+    10.1.1.4 ubuntu
+kind: ConfigMap
+metadata:
+  annotations:
+  name: coredns
+  namespace: kube-system
+FileContent
+
+  #
+  # Now we apply the configuration to coredns...
+  #
+  "${PROJECT_ROOT}"/pulumi/python/venv/bin/kubectl apply -f /tmp/coredns.yaml
+
+  #
+  # And now we check the output...
+  "${PROJECT_ROOT}"/pulumi/python/venv/bin/kubectl describe configmap --namespace kube-system coredns
+
+}
 
 #####################################################################################################################
 # Show help information
@@ -400,6 +464,12 @@ if [ "${DEPLOY}" = "TRUE" ]; then
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function tool_install() Elapsed Time: $EXECUTION_TIME <<<<<============="
+
+    START_TIME=$(date +%s.%N)
+    coredns_config
+    DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
+    echo "=============>>>>> Function coredns_config() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
