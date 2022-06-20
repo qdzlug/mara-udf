@@ -329,7 +329,7 @@ help()
    echo "Syntax: $0 [-d|k|r|h]"
    echo "options:"
    echo "d     Clone repo, deploy MARA, deploy supporting components (os, k3s)"
-   echo "k     Update the OS and deploy K3s only (no repo clone)"
+   echo "k     Update the OS and deploy K3s and tools only (no MARA clone or deploy)"
    echo "r     Remove MARA and supporting components"
    echo "h     This help screen"
    echo
@@ -483,6 +483,12 @@ elif [ "${DEPLOY_K3S}" = "TRUE" ]; then
     DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
     EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
     echo "=============>>>>> Function install_k3s() Elapsed Time: $EXECUTION_TIME <<<<<============="
+
+    START_TIME=$(date +%s.%N)
+    tool_install
+    DURATION=$(echo "$(date +%s.%N) - ${START_TIME}" | bc)
+    EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
+    echo "=============>>>>> Function tool_install() Elapsed Time: $EXECUTION_TIME <<<<<============="
 
 elif [ "${UNDEPLOY}" = "TRUE" ]; then
     START_TIME=$(date +%s.%N)
