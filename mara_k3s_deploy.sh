@@ -53,7 +53,7 @@ install_python() {
 #####################################################################################################################
 install_k3s() {
     mkdir "${HOME}"/.kube || true
-    curl -sfL https://get.k3s.io |  INSTALL_K3S_EXEC="--disable=traefik --write-kubeconfig-mode=644" sh -
+    curl -sfL https://get.k3s.io |  INSTALL_K3S_VERSION="v1.23.9+k3s1" INSTALL_K3S_EXEC="--disable=traefik --write-kubeconfig-mode=644" sh -
     k3s kubectl config view --flatten > "${HOME}"/.kube/config
 }
 
