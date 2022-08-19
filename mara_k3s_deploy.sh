@@ -521,5 +521,5 @@ echo "=============>>>>> Script Elapsed Time: $EXECUTION_TIME <<<<<=============
 
 # Note on password...
 echo " "
-echo "Passords written to ${PROJECT_ROOT}/.mara_password"
+echo "Passwords written to ${PROJECT_ROOT}/.mara_password"
 echo " "
