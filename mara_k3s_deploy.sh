@@ -518,3 +518,8 @@ fi
 DURATION=$(echo "$(date +%s.%N) - ${FULL_START_TIME}" | bc)
 EXECUTION_TIME=$(printf "%.2f seconds" "${DURATION}")
 echo "=============>>>>> Script Elapsed Time: $EXECUTION_TIME <<<<<=============" 
+
+# Note on password...
+echo " "
+echo "Passords written to ${PROJECT_ROOT}/.mara_password"
+echo " "
