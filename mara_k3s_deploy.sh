@@ -192,7 +192,7 @@ install_dns() {
   #
   # Install dnsmasq - we do this before we start mucking about with the resolvers...
   #
-  sudo apt -y install dnsmasq
+  sudo apt -y install dnsmasq pwgen
 
   # First disable the system resolver...
   sudo systemctl disable systemd-resolved
