@@ -96,24 +96,35 @@ configure_pulumi() {
     # Generate a random number for our pulumi stack...we use the built in bash RANDOM variable,
     # but if you want you can change it
     BUILD_NUMBER="${RANDOM}"
-    echo "PULUMI_STACK=marajenk${BUILD_NUMBER}" > "${PROJECT_ROOT}"/config/pulumi/environment
+
+    # Generate a random password for the values we need to set and print it out.
+    MARA_PASSWORD=$(pwgen 16 1)
+    echo $MARA_PASSWORD > "${PROJECT_ROOT}"/.mara_password
+
+    # 
+    echo "PULUMI_STACK=maraudf${BUILD_NUMBER}" > "${PROJECT_ROOT}"/config/pulumi/environment
 
     # Build the stacks...
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create marajenk${BUILD_NUMBER} -C "${PROJECT_ROOT}"/pulumi/python/config
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create marajenk${BUILD_NUMBER} -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/applications/sirius
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create maraudf${BUILD_NUMBER} -C pulumi/python/config
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create maraudf${BUILD_NUMBER} -C pulumi/python/kubernetes/secrets
 
-    # Set our helm values 
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set certmgr:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "mara.test" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "default" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:infra_type "kubeconfig" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logagent:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logstore:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:adminpass "password" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s marajenk${BUILD_NUMBER}
+    # Set the helm values
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set certmgr:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logagent:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logstore:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "maraudf${BUILD_NUMBER}.zathras.io" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "default" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:infra_type "kubeconfig" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:adminpass "${MARA_PASSWORD}" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:accounts_pwd "${MARA_PASSWORD}" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:demo_login_pwd "password" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:demo_login_user "testuser" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:ledger_pwd "${MARA_PASSWORD}" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+
 
 }
 
