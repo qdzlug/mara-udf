@@ -105,25 +105,25 @@ configure_pulumi() {
     echo "PULUMI_STACK=maraudf${BUILD_NUMBER}" > "${PROJECT_ROOT}"/config/pulumi/environment
 
     # Build the stacks...
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create maraudf${BUILD_NUMBER} -C pulumi/python/config
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create maraudf${BUILD_NUMBER} -C pulumi/python/kubernetes/secrets
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create maraudf${BUILD_NUMBER} -C "${PROJECT_ROOT}"/pulumi/python/config
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi stack select --create maraudf${BUILD_NUMBER} -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/secrets
 
     # Set the helm values
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set certmgr:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logagent:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logstore:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:helm_timeout "600" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "maraudf${BUILD_NUMBER}.zathras.io" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "default" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:infra_type "kubeconfig" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C pulumi/python/config -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:adminpass "${MARA_PASSWORD}" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:accounts_pwd "${MARA_PASSWORD}" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:demo_login_pwd "password" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:demo_login_user "testuser" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
-    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:ledger_pwd "${MARA_PASSWORD}" --secret -C pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set certmgr:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logagent:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set logstore:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:helm_timeout "600" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kic-helm:fqdn "maraudf${BUILD_NUMBER}.zathras.io" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:cluster_name "default" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:infra_type "kubeconfig" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set kubernetes:kubeconfig "$HOME/.kube/config" -C "${PROJECT_ROOT}"/pulumi/python/config -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set prometheus:adminpass "${MARA_PASSWORD}" --secret -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:accounts_pwd "${MARA_PASSWORD}" --secret -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:demo_login_pwd "password" --secret -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:demo_login_user "testuser" --secret -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
+    "${PROJECT_ROOT}"/pulumi/python/venv/bin/pulumi config set sirius:ledger_pwd "${MARA_PASSWORD}" --secret -C "${PROJECT_ROOT}"/pulumi/python/kubernetes/secrets -s maraudf${BUILD_NUMBER}
 
 
 }
@@ -167,7 +167,7 @@ cleanup() {
 # present in your environment.
 #
 # Note: you will need to make sure that this function returns 0; any non-zero RC will cause the process to abort.
-# If you need assistance with this, please see the use of "|| true" in some of the areas above.
+# If you need assistance with this, please see the use of "|| true" in some of the areas abovefeat: add pwgen install.
 #####################################################################################################################
 tool_install() {
   # Install K9s; again, piping to curl is not a good idea so this should be refactored at some point...
